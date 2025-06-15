@@ -1,11 +1,12 @@
-import { getPost } from "@/lib/db"
+import { getPost } from "@/lib/api"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { MdxContent } from "@/components/mdx-content"
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug)
+  const slug = (await params).slug
+  const post = await getPost(slug)
 
   if (!post) {
     notFound()
@@ -19,7 +20,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       </Link>
       <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
       <p className="text-sm text-foreground/60 mb-8">
-        {new Date(post.createdAt).toLocaleDateString("en-US", {
+        {new Date(post.created_at).toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric",

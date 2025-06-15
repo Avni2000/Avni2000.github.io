@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import type { Post } from "@/lib/db"
+import type { Post } from "@/lib/api"
 
 type PostFormProps = {
   action: (formData: FormData) => Promise<any>

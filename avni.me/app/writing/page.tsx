@@ -1,4 +1,4 @@
-import { getPosts, type Post } from "@/lib/db"
+import { getPosts, type Post } from "@/lib/api"
 import Link from "next/link"
 
 export default async function WritingPage() {
@@ -12,7 +12,7 @@ export default async function WritingPage() {
           <Link href={`/writing/${post.slug}`} key={post.id} className="flex justify-between items-center py-2 group">
             <span className="group-hover:underline">{post.title}</span>
             <span className="text-sm text-foreground/60">
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
+              {new Date(post.created_at).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",

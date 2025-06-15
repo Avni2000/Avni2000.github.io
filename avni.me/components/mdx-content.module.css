@@ -1,0 +1,39 @@
+/* Code block styling */
+.mdxContent pre {
+  overflow-x: auto;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+/* Code highlighting */
+.mdxContent :global(.highlighted) {
+  background-color: rgba(200, 200, 255, 0.1);
+  border-left: 2px solid #60a5fa;
+}
+
+.mdxContent :global(.word) {
+  background-color: rgba(144, 202, 249, 0.15);
+  padding: 0.2rem;
+  border-radius: 0.25rem;
+}
+
+/* Inline code styling */
+.mdxContent :not(pre) > code {
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  background-color: rgba(100, 100, 100, 0.1);
+  font-size: 0.875em;
+}
+
+/* LaTeX display equations */
+.mdxContent :global(.katex-display) {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+/* LaTeX inline equations */
+.mdxContent :global(.katex) {
+  font-size: 1.05em;
+} 

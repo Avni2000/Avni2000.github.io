@@ -1,45 +1,56 @@
-import { getPosts, deletePost } from "@/lib/db"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { logout } from "@/lib/auth"
+import { getAllDraftPosts } from '@/lib/db'
+import Link from 'next/link'
+import { cookies } from 'next/headers'
+import PostList from './PostList'
 
 export default async function AdminDashboard() {
-  const posts = await getPosts()
+  const posts = await getAllDraftPosts()
+  const cookieStore = await cookies()
+  const adminSession = cookieStore.get('admin_session')?.value
 
-  return (
-    <div className="pb-12">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/admin/new">New Post</Link>
-          </Button>
-          <form action={logout}>
-            <Button variant="outline" type="submit">
-              Logout
-            </Button>
-          </form>
+  if (!adminSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="max-w-md w-full space-y-8 p-8 text-center">
+          <h2 className="text-2xl font-bold">Authentication Required</h2>
+          <p>Please log in to access the admin dashboard.</p>
+          <Link 
+            href="/admin/login" 
+            className="inline-block mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+          >
+            Go to Login
+          </Link>
         </div>
       </div>
-      <div className="space-y-4">
-        {posts.map((post) => (
-          <div key={post.id} className="flex justify-between items-center p-4 border rounded-lg">
-            <div>
-              <h2 className="font-semibold">{post.title}</h2>
-              <p className="text-sm text-foreground/60">{new Date(post.createdAt).toLocaleDateString()}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link href={`/admin/edit/${post.id}`}>Edit</Link>
-              </Button>
-              <form action={deletePost.bind(null, post.id)}>
-                <Button variant="destructive" size="sm" type="submit">
-                  Delete
-                </Button>
-              </form>
-            </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+          <div className="flex space-x-4">
+            <Link 
+              href="/admin/posts/new" 
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              New Post
+            </Link>
+            <Link
+              href="/admin/login"
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              prefetch={false}
+            >
+              Logout
+            </Link>
           </div>
-        ))}
+        </div>
+
+        <div className="bg-card shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Manage Posts</h2>
+          <PostList initialPosts={posts} />
+        </div>
       </div>
     </div>
   )
