@@ -5,13 +5,21 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 # Database setup
 Base = declarative_base()
-engine = create_engine('sqlite:///avnime.db')
+
+# PostgreSQL connection string
+DATABASE_URL = os.getenv('DATABASE_URL', 
+    'postgresql://username:password@localhost:5432/avnime_db')
+
+engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
 # Models
@@ -33,9 +41,8 @@ class HomePage(Base):
     content = Column(Text, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-# Only create tables if they don't exist (don't drop anything)
-if not os.path.exists('avnime.db') or os.path.getsize('avnime.db') == 0:
-    Base.metadata.create_all(engine)
+# Create tables if they don't exist
+Base.metadata.create_all(engine)
 
 # Routes
 @app.route('/api/posts', methods=['GET'])
